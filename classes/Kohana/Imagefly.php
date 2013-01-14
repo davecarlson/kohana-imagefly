@@ -320,7 +320,7 @@ class Kohana_Imagefly
 //        $this->image->frame($this->url_params['w'], $this->url_params['w']);
         
         // Save
-        if ( array_key_exists($this->config, 'quality') ):
+        if ( array_key_exists('quality', $this->config) ):
             $quality = $this->config['quality'];
         else:
             $quality = 100;
