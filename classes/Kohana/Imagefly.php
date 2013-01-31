@@ -71,8 +71,11 @@ class Kohana_Imagefly
         $this->_set_params();
         
         if  ( !file_exists($this->source_file) ):
-        	header("HTTP/1.0 404 Not Found");
-        	exit;
+			$this->source_file = str_replace(".jpg", ".JPG", $this->source_file);
+			if  ( !file_exists($this->source_file) ):
+        		header("HTTP/1.0 404 Not Found");
+        		exit;
+			endif;
         endif;
         // Set the source file modified timestamp
         //$this->source_modified = filemtime($this->source_file);
@@ -106,6 +109,7 @@ class Kohana_Imagefly
                 mkdir($this->config['cache_dir'], 0775, TRUE);
             }
             catch(Exception $e)
+	
             {
                 throw new Kohana_Exception($e);
             }
@@ -160,12 +164,12 @@ class Kohana_Imagefly
         if ($this->config['enforce_presets'] AND ! in_array($params, $this->config['presets']))
             throw new HTTP_Exception_404('The requested URL :uri was not found on this server.',
                                                     array(':uri' => Request::$current->uri()));
-        
-        try { 
-        	$this->image = Image::factory($filepath);
+		try { 
+			$this->image = Image::factory($filepath);
         	
         } catch ( Kohana_Exception $e) {
-	        $this->image = Image::factory($this->config['source_dir'].'images/default.png');
+			error_log($e);
+			$this->image = Image::factory($this->config['source_dir'].'images/default.png');
 	        
         }
         
